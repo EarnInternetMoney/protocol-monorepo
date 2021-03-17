@@ -172,7 +172,7 @@ module.exports = async function (callback, argv, options = {}) {
             );
         }
         {
-            console.log("## Other Listed SuperTokens");
+            console.log("## Other Unlisted SuperTokens");
             let superTokenFactory = await sf.contracts.SuperTokenFactory.at(
                 await sf.host.getSuperTokenFactory()
             );
@@ -184,8 +184,14 @@ module.exports = async function (callback, argv, options = {}) {
                 }
             );
             for (let i = 0; i < latests.length; ++i) {
-                const token = sf.contracts.IERC20.at(latests[i].args.token);
-                console.log(await token.symbol.call(), token.address);
+                const token = await sf.contracts.ISuperToken.at(
+                    latests[i].args.token
+                );
+                console.log(
+                    await token.symbol.call(),
+                    token.address,
+                    `(${await token.getUnderlyingToken.call()})`
+                );
             }
         }
 
